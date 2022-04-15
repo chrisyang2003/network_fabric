@@ -1,7 +1,7 @@
 
-cd 
+cd fabric-samples/test-network/
 ./network.sh down
+./network.sh up createChannel -ca
 
-
-./network.sh up
-./network.sh createChannel
+cd ../../explorer
+./start.sh
