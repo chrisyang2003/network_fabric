@@ -1,7 +1,13 @@
 
 cd fabric-samples/test-network/
 ./network.sh down
-./network.sh up createChannel -ca
+./network.sh up createChannel -ca -s couchdb
 
-cd ../../explorer
-./start.sh
+sudo chmod -R 777 ./organizations
+
+# ./network.sh deployCC -ccp ./chaincode/test -ccl javascript -ccv 1.0 -ccn a4
+
+# cd ../../explorer
+# ./start.sh
+
+
