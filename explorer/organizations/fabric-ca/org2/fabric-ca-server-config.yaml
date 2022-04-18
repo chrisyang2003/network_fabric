@@ -317,7 +317,7 @@ csr:
         O: Hyperledger
         OU: Fabric
    hosts:
-     - a15364523e94
+     - 533c23c158c8
      - localhost
    ca:
       expiry: 131400h

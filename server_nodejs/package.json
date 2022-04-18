@@ -12,7 +12,9 @@
   "dependencies": {
     "express": "^4.17.3",
     "fabric-ca-client": "^2.2.11",
-    "fabric-network": "^2.2.11"
+    "fabric-common": "^2.2.11",
+    "fabric-network": "^2.2.11",
+    "fabric-protos": "^2.2.11"
   },
   "devDependencies": {
     "nodemon": "^2.0.15"

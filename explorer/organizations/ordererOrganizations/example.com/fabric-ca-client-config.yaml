@@ -117,7 +117,7 @@ csr:
       O: Hyperledger
       OU: Fabric
   hosts:
-    - ubuntu
+    - VM-0-8-ubuntu
 
 #############################################################################
 #  Registration section used to register a new identity with fabric-ca server

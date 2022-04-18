@@ -2,8 +2,23 @@ const express = require('express')
 const app = express()
 const port = 3000
 const fabric = require('./fabric_sdk_node/gateway')
+const {BlockDecoder} = require('fabric-common')
 
 
+app.use((req, res, next) => {
+
+  res.header("Access-Control-Allow-Origin", "*")
+  res.header("Access-Control-Allow-Headers", "*")
+  res.header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE, PUT")
+
+
+  console.log('[+]', req.url)
+  // console.log('[+]', req.headers)
+  next()
+})
+app.options('/:any', (req, res) => {
+  res.send('Hello World!')
+})
 
 app.get('/', (req, res) => {
   res.send('Hello World!')
@@ -16,15 +31,15 @@ app.get('/test', async (req, res) => {
   res.send(result.toString())
 })
 
-const contractName = 'a5'
+const contractName = 'a1'
 
 
 app.get('/order/getall', async (req, res, next) => {
   try{
     const network = await fabric.gateway('mychannel')
-    const contract = network.getContract(contractName);
+    const contract = network.getContract('a1');
 
-    let result = await contract.evaluateTransaction('GetAllAssets');
+    let result = await contract.evaluateTransaction('getAllorder');
     res.send(JSON.parse(result))
   }catch(err){
     next(err)
@@ -59,6 +74,45 @@ app.get('/order/:orderno', async (req, res, next) => {
 
     result = await contract.evaluateTransaction('ReadAsset', req.params.orderno);
     res.send(JSON.parse(result))
+  }catch(err){
+    next(err)
+  }
+})
+
+
+
+
+app.get('/trx/get', async (req, res, next) => {
+  try{    
+    const id = req.query.id
+    if (!id){
+      res.send('id为空')
+      return
+    }
+    const network = await fabric.gateway('mychannel')
+    const contract = network.getContract('qscc');
+
+    var resultByte = await contract.evaluateTransaction('GetTransactionByID','mychannel', id);
+    const unSerialization = BlockDecoder.decodeTransaction(resultByte).transactionEnvelope.payload
+
+    const header = unSerialization.header.channel_header
+    const mspid = unSerialization.header.signature_header.creator.mspid
+    const writedata = unSerialization.data.actions[0].payload.action.proposal_response_payload.extension.results.ns_rwset[1].rwset.writes[0].value.toString()
+    const ccname = unSerialization.data.actions[0].payload.chaincode_proposal_payload.input.chaincode_spec.chaincode_id.name
+    
+    msg = {
+      info: {
+        timestamp: header.timestamp,
+        channel_id: header.channel_id,
+        trx: header.tx_id,
+        ccname: ccname,
+        mspid:mspid
+      },
+      data: writedata
+    }
+
+    res.send(msg)
+
   }catch(err){
     next(err)
   }
