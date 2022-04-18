@@ -5,6 +5,8 @@ cd fabric-samples/test-network/
 
 sudo chmod -R 777 ./organizations
 
+./network.sh deployCC -ccp ../chaincode/test -ccl javascript -ccv 1.0 -ccn t1
+./network.sh deployCC -ccp ../chaincode/hotel -ccl javascript -ccv 1.0 -ccn a1
 # ./network.sh deployCC -ccp ./chaincode/test -ccl javascript -ccv 1.0 -ccn a4
 
 # cd ../../explorer
