@@ -11,7 +11,7 @@ app.get('/', (req, res) => {
 
 app.get('/test', async (req, res) => {
   const network = await fabric.gateway('mychannel')
-  const contract = network.getContract('t2');
+  const contract = network.getContract('t1');
   var result = await contract.evaluateTransaction('info', '{"name":"123"}');
   res.send(result.toString())
 })
@@ -19,7 +19,7 @@ app.get('/test', async (req, res) => {
 const contractName = 'a5'
 
 
-app.get('/order/getall/', async (req, res, next) => {
+app.get('/order/getall', async (req, res, next) => {
   try{
     const network = await fabric.gateway('mychannel')
     const contract = network.getContract(contractName);
@@ -45,7 +45,6 @@ app.get('/order/add', async (req, res, next) => {
     }
     // await contract.submitTransaction('CreateAsset', '12312333', '1');
     // result = await contract.submitTransaction('CreateAsset', 'asdasdsd', 'yellow', '5', 'Tom', '1300');
-    await contract.submitTransaction('InitLedger')
     // result = await contract.submitTransaction('CreateAsset', '1',JSON.stringify(order));
     // console.log(result.toString())
   }catch(err){
@@ -70,14 +69,6 @@ app.use(function(err, req, res, next) {
   res.status(500).send(err.stack.toString());
 });
 
-process.once('SIGUSR2', function () {
-  process.kill(process.pid, 'SIGUSR2');
-});
-
-process.on('SIGINT', function () {
-  // this is only called on ctrl+c, not restart
-  process.kill(process.pid, 'SIGINT');
-});
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)

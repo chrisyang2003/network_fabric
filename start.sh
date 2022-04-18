@@ -1,5 +1,6 @@
 
-cd fabric-samples/test-network/
+cd  ./network_fabric/test-network/
+
 ./network.sh down
 ./network.sh up createChannel -ca -s couchdb
 

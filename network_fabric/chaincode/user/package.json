@@ -1,7 +1,7 @@
 {
     "name": "mycontract",
     "version": "1.0.0",
-    "description": "order contract implemented in JavaScript",
+    "description": "mycontract implemented in JavaScript",
     "main": "index.js",
     "engines": {
         "node": ">=12",
