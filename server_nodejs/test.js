@@ -3,19 +3,31 @@ const {BlockDecoder} = require('fabric-common')
 const protos = require('fabric-protos')
 
 async function main() {
+    // const network = await fabric.gateway('mychannel')
+    // const contract = network.getContract('qscc');
+
     const network = await fabric.gateway('mychannel')
-    const contract = network.getContract('qscc');
+    const contract = network.getContract('a1');
+
+    result = await contract.evaluateTransaction('getOrder', '20220418171204');
+    trx = JSON.parse(result).trx
+    console.log(trx);
+    
+    
+
+
+    
 
     // for (let i = 0; i < 10; i++ ){
     //     var resultByte = await contract.submitTransaction('addOrder','1','{}');
     //     console.log(resultByte.toString());
     // }
 
-    var resultByte = await contract.evaluateTransaction('GetTransactionByID','mychannel','f5b3e20b105a16793e3fa534cd7bcee51286ccf9f40511cb7e76b2c7a29d0fb6');
-    const out = BlockDecoder.decodeTransaction(resultByte).transactionEnvelope.payload
+    // var resultByte = await contract.evaluateTransaction('GetTransactionByID','mychannel','f5b3e20b105a16793e3fa534cd7bcee51286ccf9f40511cb7e76b2c7a29d0fb6');
+    // const out = BlockDecoder.decodeTransaction(resultByte).transactionEnvelope.payload
     
-    const header = out.header.channel_header
-    console.log(header);
+    // const header = out.header.channel_header
+    // console.log(header);
     
     // data = {
     //   basic: {

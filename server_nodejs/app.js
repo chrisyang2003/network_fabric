@@ -67,13 +67,47 @@ app.get('/order/add', async (req, res, next) => {
   }
 })
 
-app.get('/order/:orderno', async (req, res, next) => {
-  try{
-    const network = await fabric.gateway('mychannel')
-    const contract = network.getContract(contractName);
 
-    result = await contract.evaluateTransaction('ReadAsset', req.params.orderno);
-    res.send(JSON.parse(result))
+
+async function getTrxDetailById(id){
+  const network = await fabric.gateway('mychannel')
+    const contract = network.getContract('qscc');
+
+    var resultByte = await contract.evaluateTransaction('GetTransactionByID','mychannel', id);
+    const unSerialization = BlockDecoder.decodeTransaction(resultByte).transactionEnvelope.payload
+    
+    const header = unSerialization.header.channel_header
+    const mspid = unSerialization.header.signature_header.creator.mspid
+
+    const writeset = unSerialization.data.actions[0].payload.action.proposal_response_payload.extension.results.ns_rwset[1].rwset.writes[0]
+    const writekey = writeset.key
+    const writedata = writeset.value.toString()
+    const ccname = unSerialization.data.actions[0].payload.chaincode_proposal_payload.input.chaincode_spec.chaincode_id.name
+
+    return {
+        writekey:writekey,
+        timestamp: header.timestamp,
+        channel_id: header.channel_id,
+        trx: header.tx_id,
+        ccname: ccname,
+        mspid:mspid,
+        data: writedata
+    }
+}
+
+app.get('/order/get', async (req, res, next) => {
+  try{
+    const id = req.query.id
+    if (!id){
+      res.status(400).send('empty!')
+      return
+    }
+    const network = await fabric.gateway('mychannel')
+    const contract = network.getContract('a1');
+
+    result = await contract.evaluateTransaction('getOrder', id);
+    const trx = JSON.parse(result).trx
+    res.send(await getTrxDetailById(trx))
   }catch(err){
     next(err)
   }
@@ -89,28 +123,7 @@ app.get('/trx/get', async (req, res, next) => {
       res.send('id为空')
       return
     }
-    const network = await fabric.gateway('mychannel')
-    const contract = network.getContract('qscc');
-
-    var resultByte = await contract.evaluateTransaction('GetTransactionByID','mychannel', id);
-    const unSerialization = BlockDecoder.decodeTransaction(resultByte).transactionEnvelope.payload
-
-    const header = unSerialization.header.channel_header
-    const mspid = unSerialization.header.signature_header.creator.mspid
-    const writedata = unSerialization.data.actions[0].payload.action.proposal_response_payload.extension.results.ns_rwset[1].rwset.writes[0].value.toString()
-    const ccname = unSerialization.data.actions[0].payload.chaincode_proposal_payload.input.chaincode_spec.chaincode_id.name
     
-    msg = {
-      info: {
-        timestamp: header.timestamp,
-        channel_id: header.channel_id,
-        trx: header.tx_id,
-        ccname: ccname,
-        mspid:mspid
-      },
-      data: writedata
-    }
-
     res.send(msg)
 
   }catch(err){
