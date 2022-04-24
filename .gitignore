@@ -3,3 +3,4 @@
 /fabric-samples
 explorer/organizations
 server_nodejs/fabric_sdk_node/wallet/*
+**/vendor

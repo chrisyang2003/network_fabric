@@ -7,11 +7,11 @@ async function main() {
     // const contract = network.getContract('qscc');
 
     const network = await fabric.gateway('mychannel')
-    const contract = network.getContract('a1');
+    const contract = network.getContract('z1');
 
-    result = await contract.evaluateTransaction('getOrder', '20220418171204');
-    trx = JSON.parse(result).trx
-    console.log(trx);
+    result = await contract.submitTransaction('InitLedger');
+    // trx = JSON.parse(result).trx
+    // console.log(trx);
     
     
 
