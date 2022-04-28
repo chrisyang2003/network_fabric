@@ -33,6 +33,18 @@ app.get('/test', async (req, res) => {
 
 const contractName = 'a1'
 
+var balance = 0
+app.get('/balance/erc20', async(req, res, next) => {
+  balance += 1
+  res.send(JSON.stringify({balance: balance}))
+})
+
+var privatebalance = 0
+app.get('/balance/private', async(req, res, next) => {
+  privatebalance += 1
+  res.send(JSON.stringify({balance: privatebalance}))
+})
+
 
 app.get('/order/getall', async (req, res, next) => {
   try{

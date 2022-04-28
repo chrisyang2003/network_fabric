@@ -7,9 +7,9 @@ async function main() {
     // const contract = network.getContract('qscc');
 
     const network = await fabric.gateway('mychannel')
-    const contract = network.getContract('z1');
+    const contract = network.getContract('a1');
 
-    result = await contract.submitTransaction('InitLedger');
+    // result = await contract.submitTransaction('InitLedger');
     // trx = JSON.parse(result).trx
     // console.log(trx);
     
@@ -18,10 +18,10 @@ async function main() {
 
     
 
-    // for (let i = 0; i < 10; i++ ){
-    //     var resultByte = await contract.submitTransaction('addOrder','1','{}');
-    //     console.log(resultByte.toString());
-    // }
+    for (let i = 0; i < 5; i++ ){
+        var resultByte = await contract.submitTransaction('addOrder',i,'{}');
+        console.log(resultByte.toString());
+    }
 
     // var resultByte = await contract.evaluateTransaction('GetTransactionByID','mychannel','f5b3e20b105a16793e3fa534cd7bcee51286ccf9f40511cb7e76b2c7a29d0fb6');
     // const out = BlockDecoder.decodeTransaction(resultByte).transactionEnvelope.payload
