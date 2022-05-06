@@ -3,6 +3,7 @@ const app = express()
 const port = 3000
 const fabric = require('./fabric_sdk_node/gateway')
 const {BlockDecoder} = require('fabric-common')
+const { Wallet } = require('fabric-network')
 
 
 app.use((req, res, next) => {
@@ -45,6 +46,50 @@ app.get('/balance/private', async(req, res, next) => {
   res.send(JSON.stringify({balance: privatebalance}))
 })
 
+function ismine(){
+  
+}
+
+
+app.get('/user/getlist', async(req, res, next) =>{
+  const network = await fabric.gateway('mychannel')
+  const contract = network.getContract('t8');
+
+  
+  var result = await contract.evaluateTransaction('info', '{"name":"123"}');
+  res.send(result.toString())
+})
+
+wallet = []
+app.get('/wallet/', async(req, res, next) => {
+
+  const decrypted = public_key.decrypt(encrypted, 'utf8');
+  if (ismine(decrypted)){
+    const v = decrypted.v
+    const rho = decrypted.rho
+    var privateMoney = {
+      isused: false,                  // 是否使用
+      value: 0,                       //面额
+      nullifier: Hash(sk + rho),      // 序列号
+      Commitment: Hash(pk + v + rho), // 承诺
+      rho: rho,                       // 随机数
+      timestamp: stamp                // 入包时间
+    }
+    wallet.push(privateMoney)
+  }
+  
+
+  privatebalance += 1
+  res.send(JSON.stringify({balance: privatebalance}))
+})
+
+app.get('/wallet/balance', async(req, res, next) => {
+  res.send(JSON.stringify({balance: 60}) + '\n')
+})
+
+app.get('/wallet/hotel', async(req, res, next) => {
+  res.send(JSON.stringify({balance: 40}) + '\n')
+})
 
 app.get('/order/getall', async (req, res, next) => {
   try{

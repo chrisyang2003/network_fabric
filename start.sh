@@ -12,7 +12,7 @@ sudo chmod -R 777 ./organizations
 
 # ./network.sh deployCC -ccp ../chaincode/zkp -ccl go -ccv 1.0 -ccn z1
 
-# cd ../../explorer
-# ./start.sh
+cd ../../explorer
+./start.sh
 
 

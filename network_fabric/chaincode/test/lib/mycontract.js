@@ -26,7 +26,12 @@ class mycontract extends Contract {
         }
     }
 
-
+    async addOrder(ctx, id, arg) {
+        await ctx.stub.putState(id, Buffer.from(arg));
+        return arg
+    }
 }
+
+
 
 module.exports = mycontract;
