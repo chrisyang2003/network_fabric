@@ -17,11 +17,10 @@ async function readState(ctx, id) {
 }
 
 async function putState(ctx, id, content) {
-	// @content string
-	if (typeof content === 'number') {
-		content = content.toString();
-	}
-	return ctx.stub.putState(id, Buffer.from(content));
+	return ctx.stub.putState(id, Buffer.from(JSON.stringify({
+		user: id,
+		balance: content
+	})));
 }
 
 async function initUser(ctx, user) {
@@ -46,13 +45,12 @@ class mycontract extends Contract {
 	}
 
 	async totalSupply(ctx) {
-		const total = await readState(ctx, 'totalSupply');
-		return parseInt(total);
+		return this.balanceOf(ctx, 'totalSupply');
 	}
 
 	async balanceOf(ctx, user) {
-		const balance = await readState(ctx, user);
-		return parseInt(balance);
+		const r = await readState(ctx, user);
+		return parseInt(JSON.parse(r).balance);
 	}
 
 	async Mint(ctx, user, _amount) {
@@ -79,14 +77,32 @@ class mycontract extends Contract {
 			throw new Error(`User ${from} does not have enough token`);
 		}
 
-		const newForm = await this.balanceOf(ctx, from) - amount;
+		const newFrom = await this.balanceOf(ctx, from) - amount;
 		const newTo = await this.balanceOf(ctx, to) + amount;
 
-		await putState(ctx, from, newForm);
+		await putState(ctx, from, newFrom);
 		await putState(ctx, to, newTo);
+	}
 
-		// return true;
 
+	// GetAllAssets returns all assets found in the world state.
+	async getTokenList(ctx) {
+		const allResults = [];
+		const iterator = await ctx.stub.getStateByRange('', '');
+		let result = await iterator.next();
+		while (!result.done) {
+			const strValue = Buffer.from(result.value.value.toString()).toString('utf8');
+			let record;
+			try {
+				record = JSON.parse(strValue);
+			} catch (err) {
+				console.log(err);
+				record = strValue;
+			}
+			allResults.push(record);
+			result = await iterator.next();
+		}
+		return JSON.stringify(allResults);
 	}
 
 }
