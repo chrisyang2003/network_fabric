@@ -1,7 +1,10 @@
 **/node_modules
 
 /fabric-samples
+explorer/organizations/*
 explorer/organizations
+explorer/organizations/
+
 server_nodejs/fabric_sdk_node/wallet/*
 **/vendor
 

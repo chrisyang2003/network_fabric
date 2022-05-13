@@ -3,13 +3,29 @@ const {BlockDecoder} = require('fabric-common')
 const protos = require('fabric-protos')
 
 async function main() {
-    // const network = await fabric.gateway('mychannel')
-    // const contract = network.getContract('qscc');
+    let network = await fabric.gateway('mychannel')
+    let contract = network.getContract('qscc');
+    let result
 
-    const network = await fabric.gateway('mychannel')
-    const contract = network.getContract('t8');
 
-    // result = await contract.submitTransaction('InitLedger');
+    contract = network.getContract('t2');
+
+    // result = await contract.evaluateTransaction('hello')
+    // console.log(result.toString());
+
+
+    // let a = ['GetTransactionByID','mychannel', '8ab8f29eda6985326159b4968ddf7daf1cafe4116fc0be3341dad98848f79d2b']   
+    result = await contract.evaluateTransaction('getALlStatus');
+    console.log(result.toString()) ;
+    // result = await contract.submitTransaction('test', JSON.stringify(a))
+    // console.log(result.toString());
+    return
+
+    // result = await contract.evaluateTransaction('GetTransactionByID','mychannel','dda15f445014101ca0b04439edbffbf06763cbc5eac9393ed5e1c22549c94b11');
+    // const unSerialization = BlockDecoder.decodeTransaction(result).transactionEnvelope.payload
+    // console.log(unSerialization);
+
+    
     // trx = JSON.parse(result).trx
     // console.log(trx);
 
@@ -69,8 +85,8 @@ async function main() {
     l = await contract.submitTransaction('addOrder', 'erc20 mint', JSON.stringify(erc20mint))
     l = await contract.submitTransaction('addOrder', 'erc20 tran', JSON.stringify(erc20tran))
 
-    l = await contract.submitTransaction('addOrder', 'privatemint', JSON.stringify(privatemint))
-    l = await contract.submitTransaction('addOrder', 'privatetran', JSON.stringify(privatetran))
+    // l = await contract.submitTransaction('addOrder', 'privatemint', JSON.stringify(privatemint))
+    // l = await contract.submitTransaction('addOrder', 'privatetran', JSON.stringify(privatetran))
 
 
 

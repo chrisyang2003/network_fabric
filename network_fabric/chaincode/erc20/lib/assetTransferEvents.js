@@ -28,6 +28,7 @@ async function initUser(ctx, user) {
 	if (!(await Exists(ctx, user))) {
 		await putState(ctx, user, 0);
 	}
+	
 }
 
 class mycontract extends Contract {
@@ -104,6 +105,8 @@ class mycontract extends Contract {
 		}
 		return JSON.stringify(allResults);
 	}
+
+
 
 }
 

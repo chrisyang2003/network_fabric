@@ -6,7 +6,7 @@ const { Contract } = require('fabric-contract-api');
 class mycontract extends Contract {
 
     async hello(ctx) {
-        return "hello world"       
+        return "hello world";
     }
 
     async info(ctx, arg){
@@ -28,7 +28,30 @@ class mycontract extends Contract {
 
     async addOrder(ctx, id, arg) {
         await ctx.stub.putState(id, Buffer.from(arg));
-        return arg
+        return arg;
+    }
+
+    async test(ctx, name ,arg){
+        return await ctx.stub.invokeChaincode(name, Array.from(arg));
+    }
+    async getALlStatus(ctx){
+        const allResults = [];
+        const iterator = await ctx.stub.getStateByRange('', '');
+        let result = await iterator.next();
+        while (!result.done) {
+            const strValue = Buffer.from(result.value.value.toString()).toString('utf8');
+            let record;
+            try {
+                record = JSON.parse(strValue);
+            } catch (err) {
+                console.log(err);
+                record = strValue;
+            }
+            allResults.push(record);
+            console.log(result.value.key);
+            result = await iterator.next();
+        }
+        return JSON.stringify(allResults);
     }
 }
 
